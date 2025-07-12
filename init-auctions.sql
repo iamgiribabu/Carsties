@@ -1,0 +1,5 @@
+IF DB_ID('Auctions') IS NULL
+BEGIN
+    CREATE DATABASE Auctions;
+END
+GO

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "StrongP@ssw0rd1!"
+    ports:
+      - "1444:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  sql-init:
+    image: mcr.microsoft.com/mssql-tools
+    depends_on:
+      - sqlserver
+    entrypoint: >
+      /bin/bash -c "
+      sleep 20 &&
+      /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P StrongP@ssw0rd1! -i /tmp/init-auctions.sql
+      "
+    volumes:
+      - ./init-auctions.sql:/tmp/init-auctions.sql:ro
+
+volumes:
+  mssql_data:
