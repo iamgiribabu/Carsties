@@ -11,7 +11,16 @@ services:
       - "1444:1433"
     volumes:
       - mssql_data:/var/opt/mssql
-
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=mongopw
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
   sql-init:
     image: mcr.microsoft.com/mssql-tools
     depends_on:
@@ -23,6 +32,6 @@ services:
       "
     volumes:
       - ./init-auctions.sql:/tmp/init-auctions.sql:ro
-
 volumes:
   mssql_data:
+  mongodb_data:
