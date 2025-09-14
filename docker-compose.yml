@@ -32,6 +32,12 @@ services:
       "
     volumes:
       - ./init-auctions.sql:/tmp/init-auctions.sql:ro
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 volumes:
   mssql_data:
   mongodb_data:
