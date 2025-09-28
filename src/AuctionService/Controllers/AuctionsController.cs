@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuctionService.Controllers
 {
@@ -52,13 +53,14 @@ namespace AuctionService.Controllers
             return Ok(auctionDto);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto createAuctionDto)
         {
             var auction = _mapper.Map<Auction>(createAuctionDto);
             auction.Item = _mapper.Map<Item>(createAuctionDto);
-            // ToDo: add current user as seller
-            auction.Seller = "currentUser"; // Replace with actual user retrieval logic
+          
+            auction.Seller = User.Identity?.Name;
 
             _context.Auctions.Add(auction);
 
@@ -76,7 +78,7 @@ namespace AuctionService.Controllers
             //var auctionDto = _mapper.Map<AuctionDto>(auction);
             return CreatedAtAction(nameof(GetAuctionById), new { id = auction.Id }, newAuction);
         }
-
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
         {
@@ -85,7 +87,10 @@ namespace AuctionService.Controllers
             {
                 return NotFound();
             }
-
+            if(auction.Seller != User.Identity?.Name)
+            {
+                return Forbid();
+            }
             auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
             auction.Item.Model = updateAuctionDto.Model ?? auction.Item.Model;
             auction.Item.Year = updateAuctionDto.Year ??  auction.Item.Year;
@@ -106,7 +111,7 @@ namespace AuctionService.Controllers
             //var auctionDto = _mapper.Map<AuctionDto>(auction);
             return Ok();
         }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAuction(Guid id)
         {
@@ -114,6 +119,10 @@ namespace AuctionService.Controllers
             if (auction == null)
             {
                 return NotFound();
+            }
+            if(auction.Seller != User.Identity?.Name)
+            {
+                return Forbid();
             }
             _context.Auctions.Remove(auction);
 

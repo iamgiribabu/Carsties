@@ -47,6 +47,19 @@ namespace IdentityService
 
         public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
         {
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("default", policy =>
+                {
+                    policy.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin();
+
+                    //policy.WithOrigins("https://your-client-app-domain.com")
+                    //      .AllowAnyHeader()
+                    //      .AllowAnyMethod();
+                });
+            });
             builder.Services.AddRazorPages();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -74,7 +87,8 @@ namespace IdentityService
                 .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryClients(Config.Clients)
                 .AddAspNetIdentity<ApplicationUser>()
-                .AddLicenseSummary();
+                .AddLicenseSummary()
+                .AddProfileService<Services.CustomProfileService>();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -113,6 +127,7 @@ namespace IdentityService
 
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors("default");
             app.UseIdentityServer();
             app.UseAuthorization();
 
