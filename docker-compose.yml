@@ -39,7 +39,7 @@ services:
       - "5672:5672"
       - "15672:15672"
   auction-svc:
-    image: trycatchlearn/aution-svc:latest
+    image: trycatchlearn/auction-svc:latest
     build:
       context: .
       dockerfile: src/AuctionService/Dockerfile
@@ -53,6 +53,22 @@ services:
       - 5109:80
     depends_on:
       - sqlserver
+      - rabbitmq
+  search-svc:
+    image: trycatchlearn/search-svc:latest
+    build:
+      context: .
+      dockerfile: src/SearchService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DEVELOPMENT
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__MongoDbConnection=mongodb://root:mongopw@mongodb
+      - AuctionServiceUrl=http://auction-svc
+    ports:
+      - 5077:80
+    depends_on:
+      - mongodb
       - rabbitmq
 volumes:
   mssql_data:
