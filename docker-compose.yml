@@ -50,7 +50,7 @@ services:
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=Auctions;User Id=sa;Password=StrongP@ssw0rd1!;Encrypt=True;TrustServerCertificate=True
       - IdentityServiceUrl=http://identity-svc
     ports:
-      - 7001:80
+      - 5109:80
     depends_on:
       - sqlserver
       - rabbitmq
