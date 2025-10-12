@@ -70,6 +70,19 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+  identity-svc:
+    image: trycatchlearn/identity-svc:latest
+    build:
+      context: .
+      dockerfile: src/IdentityService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DEVELOPMENT
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=Identity;User Id=sa;Password=StrongP@ssw0rd1!;Encrypt=True;TrustServerCertificate=True
+    ports:
+      - 5001:80
+    depends_on:
+      - sqlserver
 volumes:
   mssql_data:
   mongodb_data:
