@@ -83,6 +83,16 @@ services:
       - 5001:80
     depends_on:
       - sqlserver
+  gateway-svc:
+    image: trycatchlearn/gateway-svc:latest
+    build:
+      context: .
+      dockerfile: src/GatewayService/DockerFile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - 6001:80
 volumes:
   mssql_data:
   mongodb_data:
