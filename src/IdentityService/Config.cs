@@ -44,6 +44,7 @@ namespace IdentityService
                     RedirectUris = { "https://localhost:3000/api/auth/callback/id-server" },
                     AllowOfflineAccess = true,
                     AccessTokenLifetime = 3600*24*30, // 30 days
+                    AlwaysIncludeUserClaimsInIdToken = true
                 }
             };
     }

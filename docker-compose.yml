@@ -58,7 +58,7 @@ services:
     image: trycatchlearn/auction-svc:latest
     build:
       context: .
-      dockerfile: src/AuctionService/Dockerfile
+      dockerfile: src/AuctionService/DockerFile
     environment:
       - ASPNETCORE_ENVIRONMENT=DEVELOPMENT
       - ASPNETCORE_URLS=http://+:80
@@ -94,7 +94,7 @@ services:
     image: trycatchlearn/identity-svc:latest
     build:
       context: .
-      dockerfile: src/IdentityService/Dockerfile
+      dockerfile: src/IdentityService/DockerFile
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
